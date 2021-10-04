@@ -308,7 +308,11 @@ class ConstVariableDefine {
         THURSDAY(4),
         FRIDAY(5),
         SATURDAY(6),
-        SUNDAY(7)
+        SUNDAY(7);
+        private final int value;
+        WeekEnum(int value){
+            this.value = value;
+        }
     }
 }
 /***************************************** */
