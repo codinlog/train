@@ -362,3 +362,142 @@ class ConstVariableDefine {
     }
  }
 /***************************************** */
+/**
+ * 4. OOP规则
+ */
+
+ class Oop{
+     /**
+      * 避免通过一个类的对象引用访问此类的静态变量或静态方法
+      */
+     public static  String sHello = "Helo";//AOSP
+     public static  String MAX_COUNT = 10;
+
+     public static void method(){
+
+     }
+     /**
+      * 所有的覆写方法，必须加@Override注解。
+      */
+      @Override
+    public String toString() {
+
+    }
+
+    /**
+     * 相同参数类型，相同业务含义，才可以使用 Java的可变参数，
+     * 避免使用 Object 可变参数必须放置在参数列表的最后。（尽量不用可变参数编程）
+     */
+    public User getUsers(String type, Integer... ids){
+
+    }
+
+    /**
+     * 对外暴露的接口签名，原则上不允许修改方法签名，避免对接口调用方产生影响。接
+     * 口过时必须加@Deprecated注解，并清晰地说明采用的新接口或者新服务是什么。
+     */
+    interface InterfaceSample {
+        /**
+         * @deprecated why which
+         */
+        void method1();
+
+        void method2();
+    }
+
+    /**
+     * 不能使用过时的类或方法。
+     */
+
+     void method2(String decode){
+        String url =   java.net.URLDecoder.decode(decode);
+        /**
+         * Object的 equals方法容易抛空指针异常，应使用常量或确定有值的对象来调用 equals。 推荐使用
+         * java.util.Objects#equals （JDK7 引入的工具类）
+         */
+        "test".equals(url);
+        /**
+         * 所有的相同类型的包装类对象之间值的比较，全部使用 equals方法比较。 对于 Integer var=?在-128 至 127
+         * 之间的赋值，Integer对象是在 IntegerCache.cache产生，会复用已有对象，这个区间内的 Integer值可以直接使用==进行
+         * 判断，但是这个区间之外的所有数据，都会在堆上产生，并不会复用已有对象，推荐使用 equals方法进行判断。
+         */
+        Integer i1 = 10;
+        Integer i2 = 128;
+        i1.equals(i2);
+        bool eq = i1 == i2;
+        /**
+         * 关于基本数据类型与包装数据类型的使用标准如下：
+         * 1） 所有的 POJO类属性必须使用包装数据类型。
+         * 2） RPC方法的返回值和参数必须使用包装数据类型。
+         * 3） 所有的局部变量【推荐】使用基本数据类型。
+         */
+        class User {
+            private Long id;
+            private Integer age;
+            private String name;
+            /**
+             * 定义 DO/DTO/VO等 POJO类时，不要设定任何属性默认值。
+             */
+            private Date createTime = new Date();
+            //getter
+            //setter
+            /**
+             * POJO类必须写 toString方法
+             */
+            @Override
+            public String toString() {
+
+            }
+            /**
+             * 当一个类有多个构造方法，或者多个同名方法，这些方法应该按顺序放置在一起， 便于阅读。
+             */
+            /**
+             * 类内方法定义顺序依次是：公有方法或保护方法 > 私有方法 > getter/setter 方法。 说明：公有方法
+             */
+            /**
+             * setter方法中，参数名称与类成员变量名称一致
+             */
+            void setId(Long id){
+                this.id = id;
+            }
+            /**
+             * 在 getter/setter方法中，尽量不要增加业务逻辑，增加排查问题的难度
+             */
+            Long getId(){
+                if(null == this.id){
+                    return -1;
+                }else{
+                    return this.id;
+                }
+            }
+        }
+        /**
+         * 序列化类新增属性时，请不要修改 serialVersionUID字段，避免反序列失败；
+         */
+        class SerialSample implements Serializable {
+            public static final long serialVersionUID = 123456789L;
+            //Override method
+            /**
+             * 构造方法里面禁止加入任何业务逻辑，如果有初始化逻辑，请放在 init方法中。
+             */
+            SerialSample(){
+                init();
+            }
+            void init(){
+
+            }
+            /**
+             * 循环体内，字符串的联接方式，使用 StringBuilder的 append方法进行扩展
+             */
+            void method1() {
+                StringBuilder sb = new StringBuilder();
+                for(;;){
+                    sb.append("Hello");
+                }
+            }
+        }
+     }
+}
+
+
+ /**************************************** */
