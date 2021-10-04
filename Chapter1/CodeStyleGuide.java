@@ -7,6 +7,11 @@
  */
 package com.code.style;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 import com.code.util.Utils;
 
 /**
@@ -371,7 +376,7 @@ class ConstVariableDefine {
       * 避免通过一个类的对象引用访问此类的静态变量或静态方法
       */
      public static  String sHello = "Helo";//AOSP
-     public static  String MAX_COUNT = 10;
+     public static  int MAX_COUNT = 10;
 
      public static void method(){
 
@@ -474,8 +479,25 @@ class ConstVariableDefine {
         /**
          * 序列化类新增属性时，请不要修改 serialVersionUID字段，避免反序列失败；
          */
+        /**
+         * final可提高程序响应效率，声明成 final的情况：
+         *  1） 不需要重新赋值的变量，包括类属性、局部变量。
+         *  2） 对象参数前加final，表示不允许修改引用的指向。
+         *  3） 类方法确定不允许被重写。
+         */
+        /**
+         * 类成员与方法访问控制从严：
+         *  1） 如果不允许外部直接通过 new来创建对象，那么构造方法必须是 private。
+         *  2） 工具类不允许有 public或 default构造方法。
+         *  3） 类非 static成员变量并且与子类共享，必须是 protected。
+         *  4） 类非static成员变量并且仅在本类使用，必须是 private。
+         *  5） 类 static成员变量如果仅在本类使用，必须是 private。
+         *  6） 若是static成员变量，必须考虑是否为 final。
+         *  7） 类成员方法只供类内部调用，必须是 private。
+         *  8） 类成员方法只对继承类公开，那么限制为protected。
+         */
         class SerialSample implements Serializable {
-            public static final long serialVersionUID = 123456789L;
+            static final long serialVersionUID = 123456789L;
             //Override method
             /**
              * 构造方法里面禁止加入任何业务逻辑，如果有初始化逻辑，请放在 init方法中。
@@ -495,9 +517,67 @@ class ConstVariableDefine {
                     sb.append("Hello");
                 }
             }
+            
+            /**
+             * 慎用 Object的 clone方法来拷贝对象 对象的 clone方法默认是浅拷贝，若想实现深拷贝需要重写 clone方法实现属性对象的拷贝。
+             */
+            @Override
+            protected Object clone(){
+                return this;
+            }
         }
      }
 }
+ /**************************************** */
+ /**
+  * 5.集合处理
+  */
 
+class CollectionSample{
+    /**
+     * 关于 hashCode和 equals的处理，遵循如下规则：
+     *  1） 只要重写 equals，就必须重写 hashCode。
+     *  2） 因为Set存储的是不重复的对象，依据 hashCode和 equals进行判断，所以 Set存储的 对象必须重写这两个方法。
+     *  3） 如果自定义对象做为Map的键，那么必须重写 hashCode和 equals。
+     */
+     private Set<String> stringSet;
+     private HashMap<String,String> stringHashMap;
 
+     @Override
+     public int hashCode(){
+        return super.hashCode();
+     }
+     @Override
+     public boolean equals(Object obj) {
+         return super.equals(obj);
+     }
+
+    CollectionSample(){
+        /**
+        * ArrayList的subList结果不可强转成ArrayList
+        *在 subList场景中，高度注意对原集合元素个数的修改，会导致子列表的遍历、增 加、删除均产生 ConcurrentModificationException 异常
+        */
+
+        List<String> list = new ArrayList<>();
+        List<String> sublist = list.subList(1, 2);
+        /**
+         * 使用集合转数组的方法，必须使用集合的 toArray(T[] array)，传入的是类型完全 一样的数组，大小就是 list.size()。
+         *  toArray带参方法，入参分配的数组空间不够大时，toArray方法内部将重新分配 内存空间，并返回新数组地址；
+         * 如果数组元素大于实际所需，下标为[ list.size() ]的数组元素将被置为 null，其它数组元素保持原值
+         */
+        String[] arr= new String[list.size()];
+        list.toArray(arr);
+        /**
+         *  toArray无参方法存在问题，此方法返回值只能是 Object[]
+         */
+        Object[] objs = list.toArray();
+        /**
+         * 使用工具类 Arrays.asList()把数组转换成集合时，不能使用其修改集合相关的方法，
+         * 它的 add/remove/clear方法会抛出 UnsupportedOperationException异常。
+         * asList的返回对象是一个 Arrays内部类，并没有实现集合的修改方法
+         */
+         List<String> list1 = Arrays.asList(arr);
+    }
+
+}
  /**************************************** */
