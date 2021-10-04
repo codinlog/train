@@ -296,7 +296,15 @@ class ConstVariableDefine {
     /**
      * 如果变量值仅在一个范围内变化用 Enum类。如果还带有名称之外的延伸属性，必须 使用 Enum类
      */
-    public enum WeekEnum{ MONDAY(1), TUESDAY(2), WEDNESDAY(3), THURSDAY(4), FRIDAY(5), SATURDAY(6), SUNDAY(7);}
+    public enum WeekEnum {
+        MONDAY(1),
+        TUESDAY(2),
+        WEDNESDAY(3),
+        THURSDAY(4),
+        FRIDAY(5),
+        SATURDAY(6),
+        SUNDAY(7)
+    }
 }
 /***************************************** */
 
