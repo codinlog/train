@@ -7,12 +7,14 @@
  */
 package com.code.style;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-
-import com.code.util.Utils;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Date;
 
 /**
  * @author
@@ -314,6 +316,8 @@ class ConstVariableDefine {
             this.value = value;
         }
     }
+    //!枚举单例模式
+    //!单例模式
 }
 /***************************************** */
 
@@ -433,7 +437,7 @@ class ConstVariableDefine {
         Integer i1 = 10;
         Integer i2 = 128;
         i1.equals(i2);
-        bool eq = i1 == i2;
+        boolean eq = i1 == i2;
         /**
          * 关于基本数据类型与包装数据类型的使用标准如下：
          * 1） 所有的 POJO类属性必须使用包装数据类型。
@@ -474,7 +478,7 @@ class ConstVariableDefine {
              */
             Long getId(){
                 if(null == this.id){
-                    return -1;
+                    return -1L;
                 }else{
                     return this.id;
                 }
@@ -581,7 +585,62 @@ class CollectionSample{
          * asList的返回对象是一个 Arrays内部类，并没有实现集合的修改方法
          */
          List<String> list1 = Arrays.asList(arr);
-    }
-
+         /**
+          * 不要在 foreach循环里进行元素的 remove/add操作。
+          * remove元素请使用 Iterator 方式，如果并发操作，需要对
+          * Iterator对象加锁。
+          */
+          //err
+          for(String item : list1){
+            list1.remove(item);
+          }
+          list1.forEach(i ->{
+            list1.remove(i);
+          });
+          //err
+          for(int i = 0 ; i < list1.size();i++){
+              list1.remove(i);
+          }
+          //right
+          for(int i = list1.size()-1;i >=0;i--){
+              list1.remove(i);
+          }
+          Iterator<String> it = list1.iterator();
+          //right
+          while(it.hasNext()){
+              String item = it.next();
+              it.remove();
+          }
+          //err
+          while(it.hasNext()){
+              String item = it.next();
+              list1.remove(item);
+          }
+          /**
+           * 集合初始化时，尽量指定集合初始值大小。
+           */
+          /**
+           * 使用 entrySet遍历 Map类集合 KV，而不是 keySet方式进行遍历。 说明：keySet其实是遍历了 2 次，一次是转为
+           * Iterator对象，另一次是从 hashMap中取出 key所对应的 value。而 entrySet只是遍历了一次就把 key和 value都放到了
+           * entry中，效 率更高。如果是 JDK8，使用 Map.foreach方法。 values()返回的是 V值集合，是一个
+           * list集合对象；keySet()返回的是 K值集合，是 一个 Set集合对象；entrySet()返回的是 K-V值组合集合。
+           */
+        //┌─────────────────┬────────────┬────────────┬────────────┬─────────────┐
+        //│                 │            │            │            │             │
+        //│                 │     Key    │  Value     │   Super    │             │
+        //├─────────────────┼────────────┼────────────┼────────────┼─────────────┤
+        //│                 │            │            │            │             │
+        //│    HashTable    │    !null   │   !null    │ Dictionary │  线程安全    │
+        //├─────────────────┼────────────┼────────────┼────────────┼─────────────┤
+        //│                 │            │            │            │             │
+        //│ConcurrentHashMap│    !null   │   !null    │ AbstractMap│  分段锁技术  │
+        //├─────────────────┼────────────┼────────────┼────────────┼─────────────┤
+        //│                 │            │            │            │             │
+        //│    TreeMap      │    !null   │    null    │ AbstractMap│  线程不安全  │
+        //├─────────────────┼────────────┼────────────┼────────────┼─────────────┤
+        //│                 │            │            │            │             │
+        //│    HashMap      │     null   │    null    │ AbstractMap│  线程不安全  │
+        //└─────────────────┴────────────┴────────────┴────────────┴─────────────┘
+        }
 }
  /**************************************** */
