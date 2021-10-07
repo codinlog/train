@@ -166,14 +166,14 @@ interface UserDao {
  * 数据对象：xxxDO，xxx 即为数据表名
  */
 class UserDO {
-
+    // !todo
 }
 
 /**
  * 数据传输对象：xxxDTO，xxx 为业务领域相关的名称
  */
 class QueryUserDTO {
-
+    // !todo
 }
 
 /**
@@ -278,11 +278,11 @@ abstract class AbstractCodeStyleGuide {
 
 
 class CodeStyleGuideException {
-
+    // !todo
 }
 
 class CodeStyleGuideTest {
-
+    // !todo
 }
 
 /**
@@ -290,11 +290,11 @@ class CodeStyleGuideTest {
  */
 
 class UserFactory {
-
+    // !todo
 }
 
 class UserProxy {
-
+    // !todo
 }
 
 /**
@@ -307,22 +307,30 @@ interface ProxyFactory {
      * 尽量不要在接口里定义变量，如果一定要定义变量，肯定是与接口方法相关，并且是整个应用的基础常量。
      */
     //!public static final
-     String PROXY_NAME = "xxxxxxx";
-
+    String PROXY_NAME = "xxxxxxx";
+    //!public
+    //!abstract or static or default
     void fn();
 
     default void hi() {
         System.out.println("Hi");
     }
+    //!final
+    static void hello(){
+        System.out.println("Hello");
+    }
+    //!实现多个接口，同名default，static函数？
 }
 
 /**
  * 对于 Service 和 DAO 类，基于 SOA 的理念，暴露出来的服务一定是接口，内部 的实现类用 Impl 的后缀与接口区别。
  */
 interface CacheService {
+    //!todo
 }
 
 class CacheServiceImpl implements CacheService {
+    // !todo
 }
 
 /**
@@ -331,25 +339,82 @@ class CacheServiceImpl implements CacheService {
 //!Comparable
 //!Comparator
 interface Comparable {
-
+    // !todo
 }
 
 interface Translatable {
-
+    // !todo
 }
 
 abstract class AbstractTranslator implements Translatable {
-
+    // !todo
 }
 
 /**
  * 枚举类名建议带上 Enum 后缀，枚举成员名称需要全大写，单词间用下划线隔开。
  */
-//!枚举单例
-//!单例模式
 enum DealStatusEnum {
     SUCCESS,
     UNKOWN_REASON,
+}
+//!枚举单例
+//!单例模式
+
+class SingletonSample{
+    //!非static内部类static方法、变量
+    //!内部类分为静态内部类，成员内部类，局部内部类，匿名内部类四种
+    static class Singleton{
+        private static Singleton sInstance ;
+        // 懒汉式，线程不安全
+        public static Singleton getInstance1() {
+            if(null == sInstance ){
+                sInstance = new Singleton();
+            }
+            return sInstance;
+        }
+        // 懒汉式，线程安全
+        //!synchronized加锁对象？
+        public static synchronized Singleton getInstance2() {
+            if (null == sInstance) {
+                sInstance = new Singleton();
+            }
+            return sInstance;
+        }
+        // 饿汉式
+        //!在类装载时就实例化
+        //!classloader?
+        static Singleton sInstance1 = new Singleton();
+        // 双检锁/双重校验锁
+        //!volatile?
+        private volatile static Singleton sInstance2;
+        public static synchronized Singleton getInstance3(){
+            if (null != sInstance2) {
+                synchronized (Singleton.class) {
+                    if (null == sInstance2) {
+                        sInstance2 = new Singleton();
+                    }
+                }
+            }
+            return sInstance2;
+        }
+        // 枚举
+        //!反射?
+        public enum SingletonEnum {
+            INSTANCE;
+            private final Singleton SINGLETON;
+            SingletonEnum(){
+                SINGLETON = new Singleton();
+            }
+        }
+        // 登记式/静态内部类
+        private static class SingletonHolder {
+            private static final Singleton INSTANCE = new Singleton();
+        }
+        //!访问权限？
+        public static  Singleton getInstance4() {
+            return SingletonHolder.INSTANCE;
+        }
+    }
 }
 /***************************************** */
 /**
@@ -589,7 +654,7 @@ class ConstVariableDefine {
         /**
          * 序列化类新增属性时，请不要修改 serialVersionUID字段，避免反序列失败；
          */
-        //!序列化
+        //!序列化?
         /**
          * final可提高程序响应效率，声明成 final的情况：
          *  1） 不需要重新赋值的变量，包括类属性、局部变量。
@@ -651,8 +716,8 @@ class CollectionSample{
      *  2） 因为Set存储的是不重复的对象，依据 hashCode和 equals进行判断，所以 Set存储的 对象必须重写这两个方法。
      *  3） 如果自定义对象做为Map的键，那么必须重写 hashCode和 equals。
      */
-    //!线程安全集合
-    //!转换为线程安全集合
+    //!线程安全集合?
+    //!转换为线程安全集合?
     private Set<String> stringSet;
     private HashMap<String,String> stringHashMap;
 
@@ -778,7 +843,7 @@ class CollectionSample{
      * JDK8 的应用，可以使用 Instant代替 Date，LocalDateTime代替 Calendar，
      * DateTimeFormatter代替Simpledateformatter
      */
-    // !ThreadLocal
+    // !ThreadLocal?
     private static final ThreadLocal<DateFormat> df = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
@@ -788,12 +853,12 @@ class CollectionSample{
     /**
      * 高并发时，同步调用应该去考量锁的性能损耗
      */
-    //!Java 锁
+    //!Java 锁?
     /**
      * 使用 CountDownLatch进行异步转同步操作，每个线程退出前必须调用 countDown 方法，线程执行代码注意 catch异常，确保
      * countDown方法可以执行，避免主线程无法执行 至 countDown方法，直到超时才返回结果。
      */
-    //!CountDownLatch
+    //!CountDownLatch?
     /**
      * 避免 Random实例被多线程使用，虽然共享该实例是线程安全的，但会因竞争同一 seed 导致的性能下降。
      */
@@ -851,7 +916,7 @@ class ExceptionSample{
         }
     }
 }
-//!两大类
+//!异常类型
 
 /**************************************** */
 /**
