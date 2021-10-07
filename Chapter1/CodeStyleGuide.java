@@ -7,14 +7,21 @@
  */
 package com.code.style;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Date;
+import java.lang.ThreadLocal;
+import java.nio.file.Files;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * @author
@@ -92,6 +99,8 @@ public class CodeStyleGuide {
 
 class NameStyleGuide {
     /** 常量命名全部大写，单词间用下划线隔开，力求语义表达完整清楚，不要嫌名字长 */
+    //!静态初始化顺序
+    //!静态变量装载
     private static final int USER_NAME_MAX_LENGTH = 20;
     /**
      * 方法名、参数名、成员变量、局部变量都统一使用 lowerCamelCase 风格，必须遵从驼峰形式
@@ -214,11 +223,15 @@ class UserProxy {
 }
 
 /**
- * 接口类中的方法和属性不要加任何修饰符号（public 也不要加），保持代码的简洁 性，并加上有效的 Javadoc
- * 注释。尽量不要在接口里定义变量，如果一定要定义变量，肯定是 与接口方法相关，并且是整个应用的基础常量。
+ * 接口类中的方法和属性不要加任何修饰符号，并加上有效的 Javadoc
+ * 注释。
  */
+//!javadoc?
 
 interface ProxyFactory {
+    /**
+     * 尽量不要在接口里定义变量，如果一定要定义变量，肯定是与接口方法相关，并且是整个应用的基础常量。
+     */
     static final String PROXY_NAME = "xxxxxxx";
 
     void fn();
@@ -240,7 +253,8 @@ class CacheServiceImpl implements CacheService {
 /**
  * 如果是形容能力的接口名称，取对应的形容词做接口名（通常是–able 的形式）
  */
-
+//!Comparable
+//!Comparator
 interface Comparable {
 
 }
@@ -256,6 +270,8 @@ abstract class AbstractTranslator implements Translatable {
 /**
  * 枚举类名建议带上 Enum 后缀，枚举成员名称需要全大写，单词间用下划线隔开。
  */
+//!枚举单例
+//!单例模式
 enum DealStatusEnum {
     SUCCESS,
     UNKOWN_REASON,
@@ -265,18 +281,27 @@ enum DealStatusEnum {
  * 2.常量定义
  */
 /***************************************** */
-/**
- * 不允许出现任何魔法值（即未经定义的常量）直接出现在代码中
- */
-
 class ConstVariableDefine {
     ConstVariableDefine(String consts){
+        /**
+         * 不允许出现任何魔法值（即未经定义的常量）直接出现在代码中
+         */
+        /**
+         * 在一个 switch块内，每个 case要么通过 break/return等来终止，要么注释说明程序将继续执行到哪一个 case为止；在一个
+         * switch块内，都必须包含一个 default语句并且 放在最后，即使它什么代码也没有。
+         */
         switch (consts) {
             case "A": {
 
             }
             break;
             case "B": {
+
+            }
+            break;
+            case "C":
+            case "D":
+            case "E": {
 
             }
             break;
@@ -316,8 +341,6 @@ class ConstVariableDefine {
             this.value = value;
         }
     }
-    //!枚举单例模式
-    //!单例模式
 }
 /***************************************** */
 
@@ -331,7 +354,7 @@ class ConstVariableDefine {
         String say = "hello";
         // 运算符的左右必须有一个空格
         int flag = 0;
-        // 关键词 if 与括号之间必须有一个空格，括号内的 f 与左括号，0 与右括号不需要空格
+        // 关键词 if 与括号之间必须有一个空格，括号内的与左括号，与右括号不需要空格
         if (flag == 0) {
             System.out.println(say);
         }
@@ -366,6 +389,9 @@ class ConstVariableDefine {
         int a = 3;
         long b = 4L;
         float c = 5F;
+        //!StringBuffer
+        //!StringBuilder
+        //!String
         StringBuffer sb1 = new StringBuffer();
         // 方法体内的执行语句组、变量的定义语句组、不同的业务逻辑之间或者不同的语义 之间插入一个空行。相同业务逻辑和语义之间不需要插入空行。
     }
@@ -378,6 +404,10 @@ class ConstVariableDefine {
 /**
  * 4. OOP规则
  */
+//!类初始化顺序
+//！super static filed
+//! self static filed
+//! super static
 
  class Oop{
      /**
@@ -418,11 +448,10 @@ class ConstVariableDefine {
         void method2();
     }
 
-    /**
-     * 不能使用过时的类或方法。
-     */
-
      void method2(String decode){
+        /**
+        * 不能使用过时的类或方法。
+        */
         String url =   java.net.URLDecoder.decode(decode);
         /**
          * Object的 equals方法容易抛空指针异常，应使用常量或确定有值的对象来调用 equals。 推荐使用
@@ -487,6 +516,7 @@ class ConstVariableDefine {
         /**
          * 序列化类新增属性时，请不要修改 serialVersionUID字段，避免反序列失败；
          */
+        //!序列化
         /**
          * final可提高程序响应效率，声明成 final的情况：
          *  1） 不需要重新赋值的变量，包括类属性、局部变量。
@@ -548,17 +578,19 @@ class CollectionSample{
      *  2） 因为Set存储的是不重复的对象，依据 hashCode和 equals进行判断，所以 Set存储的 对象必须重写这两个方法。
      *  3） 如果自定义对象做为Map的键，那么必须重写 hashCode和 equals。
      */
-     private Set<String> stringSet;
-     private HashMap<String,String> stringHashMap;
+    //!线程安全集合
+    //!转换为线程安全集合
+    private Set<String> stringSet;
+    private HashMap<String,String> stringHashMap;
 
-     @Override
-     public int hashCode(){
+    @Override
+    public int hashCode(){
         return super.hashCode();
-     }
-     @Override
-     public boolean equals(Object obj) {
-         return super.equals(obj);
-     }
+    }
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 
     CollectionSample(){
         /**
@@ -580,51 +612,52 @@ class CollectionSample{
          */
         Object[] objs = list.toArray();
         /**
-         * 使用工具类 Arrays.asList()把数组转换成集合时，不能使用其修改集合相关的方法，
-         * 它的 add/remove/clear方法会抛出 UnsupportedOperationException异常。
-         * asList的返回对象是一个 Arrays内部类，并没有实现集合的修改方法
-         */
-         List<String> list1 = Arrays.asList(arr);
-         /**
-          * 不要在 foreach循环里进行元素的 remove/add操作。
-          * remove元素请使用 Iterator 方式，如果并发操作，需要对
-          * Iterator对象加锁。
-          */
-          //err
-          for(String item : list1){
+        * 使用工具类 Arrays.asList()把数组转换成集合时，不能使用其修改集合相关的方法，
+        * 它的 add/remove/clear方法会抛出 UnsupportedOperationException异常。
+        * asList的返回对象是一个 Arrays内部类，并没有实现集合的修改方法
+        */
+        List<String> list1 = Arrays.asList(arr);
+        /**
+        * 不要在 foreach循环里进行元素的 remove/add操作。
+        * remove元素请使用 Iterator 方式，如果并发操作，需要对
+        * Iterator对象加锁。
+        */
+        //err
+        for(String item : list1){
             list1.remove(item);
-          }
-          list1.forEach(i ->{
+        }
+        //err
+        list1.forEach((i) -> {
             list1.remove(i);
-          });
-          //err
-          for(int i = 0 ; i < list1.size();i++){
-              list1.remove(i);
-          }
-          //right
-          for(int i = list1.size()-1;i >=0;i--){
-              list1.remove(i);
-          }
-          Iterator<String> it = list1.iterator();
-          //right
-          while(it.hasNext()){
-              String item = it.next();
-              it.remove();
-          }
-          //err
-          while(it.hasNext()){
-              String item = it.next();
-              list1.remove(item);
-          }
-          /**
-           * 集合初始化时，尽量指定集合初始值大小。
-           */
-          /**
-           * 使用 entrySet遍历 Map类集合 KV，而不是 keySet方式进行遍历。 说明：keySet其实是遍历了 2 次，一次是转为
-           * Iterator对象，另一次是从 hashMap中取出 key所对应的 value。而 entrySet只是遍历了一次就把 key和 value都放到了
-           * entry中，效 率更高。如果是 JDK8，使用 Map.foreach方法。 values()返回的是 V值集合，是一个
-           * list集合对象；keySet()返回的是 K值集合，是 一个 Set集合对象；entrySet()返回的是 K-V值组合集合。
-           */
+        });
+        //err
+        for(int i = 0 ; i < list1.size();i++){
+            list1.remove(i);
+        }
+        //right
+        for(int i = list1.size()-1;i >=0;i--){
+            list1.remove(i);
+        }
+        Iterator<String> it = list1.iterator();
+        //right
+        while(it.hasNext()){
+            String item = it.next();
+            it.remove();
+        }
+        //err
+        while(it.hasNext()){
+            String item = it.next();
+            list1.remove(item);
+        }
+        /**
+         * 集合初始化时，尽量指定集合初始值大小。
+         */
+        /**
+        * 使用 entrySet遍历 Map类集合 KV，而不是 keySet方式进行遍历。 说明：keySet其实是遍历了 2 次，一次是转为
+        * Iterator对象，另一次是从 hashMap中取出 key所对应的 value。而 entrySet只是遍历了一次就把 key和 value都放到了
+        * entry中，效 率更高。如果是 JDK8，使用 Map.foreach方法。 values()返回的是 V值集合，是一个
+        * list集合对象；keySet()返回的是 K值集合，是 一个 Set集合对象；entrySet()返回的是 K-V值组合集合。
+        */
         //┌─────────────────┬────────────┬────────────┬────────────┬─────────────┐
         //│                 │            │            │            │             │
         //│                 │     Key    │  Value     │   Super    │             │
@@ -641,6 +674,134 @@ class CollectionSample{
         //│                 │            │            │            │             │
         //│    HashMap      │     null   │    null    │ AbstractMap│  线程不安全  │
         //└─────────────────┴────────────┴────────────┴────────────┴─────────────┘
+        /**
+         * 创建线程或线程池时请指定有意义的线程名称，方便出错时回溯
+         */
+        //!线程的几种创建方式
+        Thread thread = new Thread();
+        thread.setName("name");
+        /**
+         * 线程池不允许使用 Executors去创建
+         */
+        Executors.newFixedThreadPool(12);
+        Executors.newScheduledThreadPool(12);
+        Executors.newCachedThreadPool();
+        Executors.newSingleThreadScheduledExecutor();
+        /**
+         * 线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。
+         * ThreadPoolExecutor
+         * -> newFixedThreadPool
+         * -> newScheduledThreadPool
+         * -> newCachedThreadPool
+         * -> newSingleThreadScheduledExecutor
+         */
+    }
+    
+    /**
+     * SimpleDateFormat 是线程不安全的类， 一般不要定义为 static变量，如果定义为 static，必须加锁，或者使用
+     * DateUtils工具类
+     */
+    /**
+     * JDK8 的应用，可以使用 Instant代替 Date，LocalDateTime代替 Calendar，
+     * DateTimeFormatter代替Simpledateformatter
+     */
+    // !ThreadLocal
+    private static final ThreadLocal<DateFormat> df = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd");
         }
+    };
+    /**
+     * 高并发时，同步调用应该去考量锁的性能损耗
+     */
+    //!Java 锁
+    /**
+     * 使用 CountDownLatch进行异步转同步操作，每个线程退出前必须调用 countDown 方法，线程执行代码注意 catch异常，确保
+     * countDown方法可以执行，避免主线程无法执行 至 countDown方法，直到超时才返回结果。
+     */
+    //!CountDownLatch
+    /**
+     * 避免 Random实例被多线程使用，虽然共享该实例是线程安全的，但会因竞争同一 seed 导致的性能下降。
+     */
+    //!ThreadLocalRandom
+    /**
+     * volatile解决多线程内存不可见问题。对于一写多读，是可以解决变量同步问题，
+     */
+    //!AtomicInteger
+    //!AtomicLong
+    //!LongAdder => 比AtomicLong性能更好（减少乐观锁的重试次数）
 }
- /**************************************** */
+/**************************************** */
+/**
+* 6.异常
+*/
+
+/**
+* 不要捕获 Java 类库中定义的继承自 RuntimeException 的运行时异常类，如： IndexOutOfBoundsException、
+* NullPointerException，这类异常由程序员预检查 来规避，保证程序健壮性。
+*/
+/**
+* 异常不要用来做流程控制，条件控制，因为异常的处理效率比条件分支低。
+*/
+/**
+* 对大段代码进行 try-catch，这是不负责任的表现。catch时请分清稳定代码和非稳 定代码，稳定代码指的是无论如何不会出错的代码。对于非稳定代码的
+* catch尽可能进行区分 异常类型，再做对应的异常处理。
+*/
+/**
+* 捕获异常是为了处理它，不要捕获了却什么都不处理而抛弃之，如果不想处理它，请
+* 将该异常抛给它的调用者。最外层的业务使用者，必须处理异常，将其转化为用户可以理解的 内容。
+*/
+/**
+* 不能在 finally块中使用 return，finally块中的 return返回后方法结束执行，不会再执行 try块中的 return语句。
+*/
+/**
+* finally块必须对资源对象、流对象进行关闭，有异常也要做 try-catch。 说明：如果 JDK7，可以使用
+* try-with-resources方式。
+*/
+/**
+* 捕获异常与抛异常，必须是完全匹配，或者捕获异常是抛异常的父类。
+*/
+/**
+* 方法的返回值可以为 null，不强制返回空集合，或者空对象等，必须添加注释充分 说明什么情况下会返回 null值。调用方需要进行 null判断防止
+* NPE问题
+*/
+class ExceptionSample{
+
+    void method(){
+        try(InputStream in = new FileInputStream("a.txt")){
+
+        }catch(FileNotFoundException e){
+
+        }finally{
+
+        }
+    }
+}
+//!两大类
+
+/**************************************** */
+/**
+* 注释
+*/
+/**
+* 类、类属性、类方法的注释必须使用 Javadoc规范，使用/**内容*/，
+* 不得使用 //xxx方式。
+*/
+/**
+* 所有的抽象方法（包括接口中的方法）必须要用 Javadoc 注释、除了返回值、参数、 异常说明外，还必须指出该方法做什么事情，实现什么功能。
+*/
+/**
+* 所有的类都必须添加创建者信息。
+*/
+/**
+* 所有的枚举类型字段必须要有注释，说明每个数据项的用途。
+*/
+/**
+* 注释把问题说清楚。专有名词与关键字保持英文原文即可。
+* TCP
+*/
+/**
+ * 代码修改的同时，注释也要进行相应的修改，尤其是参数、返回值、异常、核心逻辑 等的修改。
+ */
+/************************************** */
