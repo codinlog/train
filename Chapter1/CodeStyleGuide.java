@@ -120,6 +120,53 @@ public class CodeStyleGuide {
 class NameStyleGuide {
     /** 常量命名全部大写，单词间用下划线隔开，力求语义表达完整清楚，不要嫌名字长 */
     private static final int USER_NAME_MAX_LENGTH = 20;
+    //!存储位置分配
+    //!左值 右值？
+    class Memory{
+        static final int A = 10;//常量池
+        static final String B = "B";//常量池
+        //成员变量存储在堆中的对象里面，由垃圾回收器负责回收
+        int c =  10;
+        //"D" 位于常量池
+        // D 引用位于堆
+        String D = "D";
+        String F = "D";
+        //! D == F true
+        // "D" 位于常量池
+        // new String 位于堆
+        // D1 引用位于堆
+        //!String D = new String("D");产生几个对象？
+        String D1 = new String("D");
+        int day;
+        int month;
+        int year;
+        Memory(int d, int m, int y) {
+            //d，m，y为局部变量存储在栈中，且它们的类型为基础类型，因此它们的数据也存储在栈中
+            //day,month,year为成员变量，它们存储在堆中(new Memory)里面。当BirthDate构造方法执行完之后，d,m,y将从栈中消失。
+            day = d;
+            month = m;
+            year = y;
+        }
+        //形式参数是局部变量，局部变量的数据存在于栈内存中。栈内存中的局部变量随着方法的消失而消失。
+        void method(String s) {
+            // 100 为字面量
+            // i为局部变量，引用和值存在栈中。当方法change执行完成后，i就会从栈中消失。
+            int i = 100;
+            int m = 100;
+            //!在栈中创建一个变量为a的引用
+            //!查找有没有字面值为100的地址
+            //!没找到，就开辟一个存放100这个字面值的地址，然后将ai向3的地址。
+            //!处理int m = 100；在创建完i的引用变量后，由于在栈中已经有100这个字面值，便将m直接指向100的地址
+            //!i与m同时均指向100
+        }
+
+        public static void main(String[] args){
+            //局部变量，基础类型，引用和值都存在栈中
+            int date = 9;
+            //m为对象引用，存在栈中，对象(new Memory)存在堆中
+            Memory m = new Memory(1,2,3);
+        }
+    }
     /**
      * 方法名、参数名、成员变量、局部变量都统一使用 lowerCamelCase 风格，必须遵从驼峰形式
      */
