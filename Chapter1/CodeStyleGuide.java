@@ -36,6 +36,10 @@ import java.io.InputStream;
 //!java文件不包含public类，这个类就无须于java文件名相同
 //!main不一定必须包含在public类中，但是要想运行main方法，无论类标识符如何，类名与文件名都必须相同
 //!面向对象的特征？
+//!抽象
+//!封装
+//!继承
+//!多态
 public class CodeStyleGuide {
     /** 中括号是数组类型的一部分，数组定义如下:String[] args */
     //!String
@@ -144,7 +148,7 @@ class NameStyleGuide {
 /**
  * Service/DAO 层方法命名规约
  */
-interface UserDao {
+interface UserDAO {
     /**
      * 获取单个对象的方法用 get 做前缀
      *
@@ -603,7 +607,7 @@ class ConstVariableDefine {
      /**
       * 所有的覆写方法，必须加@Override注解。
       */
-      @Override
+    @Override
     public String toString() {
 
     }
@@ -629,7 +633,7 @@ class ConstVariableDefine {
         void method2();
     }
 
-     void method2(String decode){
+    void method2(String decode){
         /**
         * 不能使用过时的类或方法。
         */
@@ -745,7 +749,7 @@ class ConstVariableDefine {
                 return this;
             }
         }
-     }
+    }
 }
  /**************************************** */
  /**
