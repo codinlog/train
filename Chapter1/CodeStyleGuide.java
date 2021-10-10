@@ -22,21 +22,27 @@ import java.lang.ThreadLocal;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author
  * @date
  * 描述
  */
-// !一个java源文件最多包含一个public类，并且这个类必须与源文件名相同
-// !java文件不包含public类，这个类就无须于java文件名相同
-// !main不一定必须包含在public类中，但是要想运行main方法，无论类标识符如何，类名与文件名都必须相同
+//!一个java源文件最多包含一个public类，并且这个类必须与源文件名相同
+//!java文件不包含public类，这个类就无须于java文件名相同
+//!main不一定必须包含在public类中，但是要想运行main方法，无论类标识符如何，类名与文件名都必须相同
+//!面向对象的特征？
 public class CodeStyleGuide {
     /** 中括号是数组类型的一部分，数组定义如下:String[] args */
     //!String
     //!Integer
     //!Long
     //!...
+    //!基本数据类型？
     public static void main(String[] args) {
 
     }
@@ -551,6 +557,34 @@ class ConstVariableDefine {
 //!类初始化顺序
 //!：静态代码块和静态成员变量 > 构造代码块和普通成员变量 > 构造方法。
 
+// class Base {
+//     String name = "Hello";
+//     Integer id = getId();
+
+//     Integer getId() {
+//         return new Random(System.currentTimeMillis()).nextInt(1000);
+//     }
+// }
+
+// class Derived extends Base {
+//     String name = "Hi";
+
+//     @Override
+//     Integer getId() {
+//         return name.length();
+//     }
+// }
+
+// /**
+//  * @author qr
+//  */
+// public class Main {
+
+//     public static void main(String[] args) {
+//         new Derived();
+//     }
+// }
+
  class Oop{
      /**
       * 避免通过一个类的对象引用访问此类的静态变量或静态方法
@@ -910,12 +944,12 @@ class CollectionSample{
 */
 class ExceptionSample{
 
-    void method(){
-        try(InputStream in = new FileInputStream("a.txt")){
+    void method() {
+        try (InputStream in = new FileInputStream("a.txt")) {
 
-        }catch(FileNotFoundException e){
+        } catch (IOException e) {
 
-        }finally{
+        } finally {
 
         }
     }
