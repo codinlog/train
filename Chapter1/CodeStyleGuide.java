@@ -42,16 +42,14 @@ import java.io.InputStream;
 //!多态
 public class CodeStyleGuide {
     /** 中括号是数组类型的一部分，数组定义如下:String[] args */
-    //!String
-    //!Integer
-    //!Long
-    //!...
     //!基本数据类型？
-    //!任意大小
+    //!包装类型？
+    //!无符号处理？
+    //!任意大小？
     //!BigInteger
     //!BigDecimal
     //!在运算中 BigInteger 类型可以准确地表示任何大小的整数值
-    //!BigDecimal 类支持任何精度的浮点数，可以用来精确计算货币值
+    //!BigDecimal类支持任何精度的浮点数，可以用来精确计算货币值
     public static void main(String[] args) {
 
     }
