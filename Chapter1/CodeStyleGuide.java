@@ -66,7 +66,7 @@ public class CodeStyleGuide {
  */
 // !领域模型(domainmodel):描述业务用例实现的对象模型。它是对业务角色和业务实体之间应该如何联系和协作以执行业务的一种抽象
 // ! 1.DO（ Data Object）：与数据库表结构一一对应，通过DAO层向上传输数据源对象
-// ! 2.TO（Data Transfer Object）：数据传输对象，Service或Manager向外传输的对象
+// ! 2.DTO（Data Transfer Object）：数据传输对象，Service或Manager向外传输的对象
 // ! 3.DAO（Data Access Object）：数据访问对象，对于该数据库表、某个实体的增删改查
 // ! 4.BO（Business Object）：业务对象，由Service层输出的封装业务逻辑的对象
 // ! 5.AO（ Application Object）：应用对象，在Web层与Service层之间抽象的复用对象模型，极为贴近展示层，复用度不高
@@ -118,10 +118,10 @@ public class CodeStyleGuide {
 class NameStyleGuide {
     /** 常量命名全部大写，单词间用下划线隔开，力求语义表达完整清楚，不要嫌名字长 */
     private static final int USER_NAME_MAX_LENGTH = 20;
-    //!存储位置分配
     //!左值 右值？
     //!位置表达式(左值) => 数据单元的内存
     //!值表达式(右值) => 存储单元地址中的数据
+    //!存储位置分配
     //!栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中（字符串常量对象存放在常量池中)
     //!堆：存放所有new出来的对象
     //!静态域：存放静态成员（static定义的）
@@ -151,15 +151,15 @@ class NameStyleGuide {
             month = m;
             year = y;
         }
-        //形式参数是局部变量，局部变量的数据存在于栈内存中。栈内存中的局部变量随着方法的消失而消失。
+        //形式参数是局部变量，局部变量存在于栈内存中。栈内存中的局部变量随着方法的消失而消失。
         void method(String s) {
             // 100 为字面量
             // i为局部变量，引用和值存在栈中。当方法change执行完成后，i就会从栈中消失。
             int i = 100;
             int m = 100;
-            //!在栈中创建一个变量为a的引用
+            //!在栈中创建一个变量为i的引用
             //!查找有没有字面值为100的地址
-            //!没找到，就开辟一个存放100这个字面值的地址，然后将ai向3的地址。
+            //!没找到，就开辟一个存放100这个字面值的地址，然后将i指向3的地址。
             //!处理int m = 100；在创建完i的引用变量后，由于在栈中已经有100这个字面值，便将m直接指向100的地址
             //!i与m同时均指向100
         }
@@ -252,12 +252,12 @@ class QueryUserDTO {
 // !POJO（Plain Ordinary Java Object）简单的Java对象，实际就是普通JavaBeans,其中有一些属性及其getter
 // !setter方法的类,没有业务逻辑，有时可以作为VO(value -object)或dto(Data Transform Object)来使用
 class User {
-    private boolean man;
+    private boolean success;
     private String name;
     private int age;
 
-    public boolean isMan() {
-        return this.man;
+    public boolean isSuccess() {
+        return this.success;
     }
 
 }
@@ -379,13 +379,13 @@ interface ProxyFactory {
     //!public static final
     String PROXY_NAME = "xxxxxxx";
     //!public
-    //!abstract or static or default
+    //!abstract / static / default
     void fn();
 
     default void hi() {
         System.out.println("Hi");
     }
-    //!final
+    //!public final
     static void hello(){
         System.out.println("Hello");
     }
@@ -427,8 +427,8 @@ enum DealStatusEnum {
     SUCCESS,
     UNKOWN_REASON,
 }
-//!枚举单例
-//!单例模式
+//!枚举单例?
+//!单例模式?
 
 class SingletonSample{
     //!非static内部类static方法、变量
@@ -478,7 +478,7 @@ class SingletonSample{
         }
         // 登记式/静态内部类
         private static class SingletonHolder {
-            private static final Singleton INSTANCE = new Singleton();
+            static final Singleton INSTANCE = new Singleton();
         }
         //!访问权限？
         public static  Singleton getInstance4() {
@@ -858,7 +858,7 @@ class CollectionSample{
         * remove元素请使用 Iterator 方式，如果并发操作，需要对
         * Iterator对象加锁。
         */
-        //err
+        //err iter
         for(String item : list1){
             list1.remove(item);
         }
@@ -951,7 +951,7 @@ class CollectionSample{
     /**
      * 高并发时，同步调用应该去考量锁的性能损耗
      */
-    //!Java 锁?
+    //!Java锁?
     /**
      * 使用 CountDownLatch进行异步转同步操作，每个线程退出前必须调用 countDown 方法，线程执行代码注意 catch异常，确保
      * countDown方法可以执行，避免主线程无法执行 至 countDown方法，直到超时才返回结果。
